@@ -2,4 +2,4 @@
 # Wait & Learn grading wrapper. Usage: wl got | wl missed
 # Add an alias so you can just type `wl got`:
 #   echo "alias wl='$HOME/Desktop/wait-and-learn/terminal/wl'" >> ~/.zshrc
-exec "$HOME/.bun/bin/bun" "$(dirname "$0")/grade.js" "$@"
+exec "$HOME/.bun/bin/bun" "$(dirname "$0")/grade.mjs" "$@"

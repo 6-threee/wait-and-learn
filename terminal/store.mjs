@@ -7,21 +7,31 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { createRequire } from "module";
+import { fileURLToPath } from "url";
 
 const require = createRequire(import.meta.url);
-const HERE = import.meta.dir;
+// Node + bun compatible (import.meta.dir is bun-only).
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+
+// Resolve a module from the first path that loads. Supports both the dev layout
+// (terminal/ next to ../src and ../decks) and the flat plugin layout (everything
+// copied into one runtime/ directory).
+function tryRequire(candidates) {
+  for (const p of candidates) { try { return require(p); } catch (e) {} }
+  return null;
+}
 
 // The same deck file the extension bundles (module.exports = the deck object).
-export const deck = (function () {
-  try { return require(path.join(HERE, "..", "decks", "spanish-starter.js")); }
-  catch (e) { return null; }
-})();
+export const deck = tryRequire([
+  path.join(HERE, "spanish-starter.js"),                 // flat plugin runtime
+  path.join(HERE, "..", "decks", "spanish-starter.js")   // dev layout
+]);
 
 // The same pure Leitner scheduler the extension uses.
-export const Scheduler = (function () {
-  try { return require(path.join(HERE, "..", "src", "scheduler.js")); }
-  catch (e) { return null; }
-})();
+export const Scheduler = tryRequire([
+  path.join(HERE, "scheduler.js"),                       // flat plugin runtime
+  path.join(HERE, "..", "src", "scheduler.js")           // dev layout
+]);
 
 const DIR = path.join(os.homedir(), ".wait-and-learn");
 
@@ -52,6 +62,10 @@ export function saveSrs(deckId, map) { writeJson(path.join(DIR, "srs." + safeId(
 // Global (not per-session) so the grading command can target the shown card.
 export function loadRhythm() { return readJson(path.join(DIR, "rhythm.json"), {}) || {}; }
 export function saveRhythm(obj) { writeJson(path.join(DIR, "rhythm.json"), obj); }
+
+// Config written by the plugin setup (e.g. { prevCommand } for combined mode,
+// where we keep the user's previous status line and append the flashcard).
+export function loadConfig() { return readJson(path.join(DIR, "config.json"), {}) || {}; }
 
 // Build the [{ id, state }] entries the scheduler's pickNext expects.
 export function entries(srs) {

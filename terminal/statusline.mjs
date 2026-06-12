@@ -11,15 +11,17 @@
 // Configure with a short refreshInterval so it rotates during waits (README).
 // Fail-silent: prints nothing on error rather than break the status bar.
 import fs from "fs";
-import { deck, Scheduler, loadSrs, saveSrs, loadRhythm, saveRhythm, entries } from "./store.js";
+import { execSync } from "child_process";
+import { deck, Scheduler, loadSrs, saveSrs, loadRhythm, saveRhythm, loadConfig, entries } from "./store.mjs";
 
 // How many refreshes the revealed answer lingers before auto-advancing if you
 // do not grade it. With refreshInterval 3, 2 = the answer shows for ~6s.
 const REVEAL_TICKS = 2;
 
 try {
-  // Drain stdin (Claude Code pipes session JSON); we do not need it here.
-  try { fs.readFileSync(0, "utf8"); } catch (e) {}
+  // Read stdin (Claude Code pipes session JSON). Kept for combined mode below.
+  let stdinRaw = "";
+  try { stdinRaw = fs.readFileSync(0, "utf8"); } catch (e) {}
 
   if (!deck || !Scheduler || !Array.isArray(deck.cards) || !deck.cards.length) process.exit(0);
 
@@ -64,6 +66,27 @@ try {
   } else {
     out = `${dim}📘 ${lang}${reset} ${bold}${cyan}${card.front}${reset} ${dim}→${reset} ${card.back}`;
   }
+
+  // Combined mode: if the plugin setup saved the user's previous status-line
+  // command, run it (with the same stdin) and show its output first, so they
+  // keep their normal bar and get the flashcard appended. Defensive: on any
+  // error or timeout we just show the flashcard alone.
+  //
+  // Security: prevCommand is the user's OWN previously-configured status-line
+  // command, read from their settings.json by the plugin setup. It is not
+  // external/network input - it is the same shell command Claude Code was
+  // already running every refresh. A shell is required (status lines are shell
+  // pipelines like jq). The piped session JSON goes via `input` (stdin), never
+  // interpolated into the command string, so there is no injection from it.
+  const cfg = loadConfig();
+  if (cfg && cfg.prevCommand) {
+    try {
+      const prev = execSync(cfg.prevCommand, { input: stdinRaw, timeout: 1500, stdio: ["pipe", "pipe", "ignore"] })
+        .toString().replace(/\n+$/, "");
+      if (prev) out = prev + `  ${dim}|${reset}  ` + out;
+    } catch (e) { /* prev command failed; show flashcard alone */ }
+  }
+
   process.stdout.write(out);
 
   // Persist the state that is now on screen (so grading targets this card).

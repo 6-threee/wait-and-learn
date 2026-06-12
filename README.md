@@ -133,6 +133,15 @@ not. It prints a one-line confirmation and the status line moves to a fresh card
 - It uses the bundled Spanish deck. Switching decks is a browser-side feature for
   now.
 
+### Sharing it with others
+
+The `terminal/` setup above is the hand-wired version for this machine. To
+distribute the terminal version to other people, there is a Claude Code **plugin**
+in `plugin/` (installed from the marketplace at `.claude-plugin/marketplace.json`).
+It bundles a self-contained runtime and ships a `/wait-and-learn:setup` command
+that copies the runtime to `~/.wait-and-learn/runtime/` and wires the status line
+into the user's settings (keeping any existing one). See `plugin/README.md`.
+
 ## Importing a deck
 
 Open the extension's options page (right-click the extension icon → **Options**,

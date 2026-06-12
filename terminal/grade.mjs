@@ -6,7 +6,7 @@
 //   wl missed   you did not      -> demote to box 1 (seen more often)
 //
 // `wl` is the wrapper script in this folder; see the README for the alias.
-import { deck, Scheduler, loadSrs, saveSrs, loadRhythm, saveRhythm } from "./store.js";
+import { deck, Scheduler, loadSrs, saveSrs, loadRhythm, saveRhythm } from "./store.mjs";
 
 const arg = String(process.argv[2] || "").toLowerCase();
 const gotIt = arg === "got" || arg === "g" || arg === "y" || arg === "yes" || arg === "know";
