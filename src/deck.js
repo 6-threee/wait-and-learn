@@ -1,6 +1,6 @@
 var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
 
-// WL.DeckStore — loads decks and persists SRS state via chrome.storage.local.
+// WL.DeckStore - loads decks and persists SRS state via chrome.storage.local.
 // Bundled deck comes from the WL.__bundledDeck global (not fetched). Imported
 // decks live under wl.decks. SRS state under wl.srs.<deckId>. Active deck id
 // under wl.activeDeck. Never throws into the page: on any storage error it logs

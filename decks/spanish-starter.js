@@ -1,7 +1,7 @@
 var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
 WL.__bundledDeck = {
   "id": "bundled:spanish-starter",
-  "name": "Spanish — Starter 40",
+  "name": "Spanish Starter 40",
   "lang": "es",
   "cards": [
     { "id": "es-0001", "front": "hola", "back": "hello", "example": "Hola, ¿cómo estás?" },

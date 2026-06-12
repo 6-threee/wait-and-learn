@@ -1,4 +1,4 @@
-# Wait & Learn — Flashcards while Claude thinks
+# Wait & Learn - Flashcards while Claude thinks
 
 **Date:** 2026-06-11
 **Status:** Approved design, ready to build
@@ -31,7 +31,7 @@ response with a single, glanceable language flashcard. Tap to reveal the transla
 |---|---|---|
 | Form factor | Chrome MV3 extension, load-unpacked | Personal use, full control of the page |
 | Target site | `claude.ai` only | Where Jonathan waits daily |
-| Detection | **Approach A** — watch for the "generating" signal (stop button) | Most semantic, stable signal; isolated so a Claude UI change is a one-file fix |
+| Detection | **Approach A** - watch for the "generating" signal (stop button) | Most semantic, stable signal; isolated so a Claude UI change is a one-file fix |
 | Placement | Floating card, fixed bottom-right corner | Robust (no dependence on Claude's internal layout), glanceable |
 | Card type | Tap-to-reveal flashcard | Active recall in even a 2-second wait |
 | Scheduling | Leitner-box spaced repetition, local | Proven retention; tiny algorithm |
@@ -47,19 +47,19 @@ response with a single, glanceable language flashcard. Tap to reveal the transla
 
 A single content script bundle injected only on `https://claude.ai/*`. All modules attach to one
 global namespace `window.WL` (no bundler; manifest loads files in order). No background service
-worker needed in v1 — content scripts can use `chrome.storage` directly.
+worker needed in v1 - content scripts can use `chrome.storage` directly.
 
 ```
 claude.ai page
   └─ content script (isolated world)
-       WL.Scheduler  (pure SRS logic — also unit-tested in Bun)
+       WL.Scheduler  (pure SRS logic - also unit-tested in Bun)
        WL.DeckStore  (load decks, persist SRS state via chrome.storage.local)
        WL.Detector   (THE only Claude-specific piece: emits generationStart/End)
        WL.Card       (Shadow-DOM floating card UI)
        content.js    (wiring: Detector → Scheduler/DeckStore → Card)
 
-options/ (separate page) — pick deck, import a word list, view stats, reset progress
-decks/spanish-starter.json — bundled starter deck (language-agnostic schema)
+options/ (separate page) - pick deck, import a word list, view stats, reset progress
+decks/spanish-starter.json - bundled starter deck (language-agnostic schema)
 ```
 
 **Module boundaries:** Scheduler is pure (no DOM, no storage) and the only unit-tested unit.
@@ -86,14 +86,14 @@ Leitner boxes 1–5. Intervals by box (ms):
 `{1: 60_000, 2: 600_000, 3: 3_600_000, 4: 86_400_000, 5: 345_600_000}`
 (1 min, 10 min, 1 h, 1 day, 4 days).
 
-- `WL.Scheduler.INTERVALS` — `{1..5: ms}` map (exported for tests).
+- `WL.Scheduler.INTERVALS` - `{1..5: ms}` map (exported for tests).
 - `WL.Scheduler.newState(now)` → `{ box: 1, dueAt: now, seen: 0, lastSeen: 0 }`.
-- `WL.Scheduler.pickNext(entries, now)` — `entries: [{ id, state }]` where `state` may be
+- `WL.Scheduler.pickNext(entries, now)` - `entries: [{ id, state }]` where `state` may be
   `undefined` (unseen → treated as due, `dueAt = 0`, `lastSeen = 0`).
   Returns the chosen `id`, or `null` if `entries` is empty.
   Selection: among entries with `dueAt <= now` (due), pick the one sorted by `dueAt` asc,
   then `box` asc, then `lastSeen` asc. If **none** are due, fall back to the
-  least-recently-seen (smallest `lastSeen`, unseen first). Deterministic — no randomness.
+  least-recently-seen (smallest `lastSeen`, unseen first). Deterministic - no randomness.
 - `WL.Scheduler.answer(state, gotIt, now)` → new state.
   `gotIt` → `box = min(box + 1, 5)`; else `box = 1`.
   `dueAt = now + INTERVALS[newBox]`; `seen = seen + 1`; `lastSeen = now`.
@@ -111,7 +111,7 @@ page and assigns the deck object to `WL.__bundledDeck`. DeckStore reads bundled 
 `WL.__bundledDeck` (treat as a one-element registry for now). This removes async fetch and any
 `connect-src`/`web_accessible_resources` CSP concern on claude.ai.
 
-- `await WL.DeckStore.init()` — resolve active deck (default `bundled:spanish-starter`), load its
+- `await WL.DeckStore.init()` - resolve active deck (default `bundled:spanish-starter`), load its
   cards (from `WL.__bundledDeck` for bundled, or `wl.decks` for imported) and the SRS map into memory.
 - `WL.DeckStore.getActiveDeck()` → `{ id, name, lang, cards: [{id, front, back, example?}] }` | null.
 - `WL.DeckStore.getEntries()` → `[{ id, card, state }]` merging active deck cards with stored SRS
@@ -119,18 +119,18 @@ page and assigns the deck object to `WL.__bundledDeck`. DeckStore reads bundled 
   `{id, state}`).
 - `WL.DeckStore.getCard(cardId)` → card object | undefined.
 - `WL.DeckStore.getState(cardId)` → state | undefined.
-- `await WL.DeckStore.saveState(cardId, state)` — persist one card's state under `wl.srs.<deckId>`.
+- `await WL.DeckStore.saveState(cardId, state)` - persist one card's state under `wl.srs.<deckId>`.
 - `await WL.DeckStore.listDecks()` → `[{ id, name, lang, count }]` (bundled + imported).
 - `await WL.DeckStore.setActiveDeck(deckId)`.
-- `await WL.DeckStore.importDeck(deckObj)` — validate schema (see below); on success store under
+- `await WL.DeckStore.importDeck(deckObj)` - validate schema (see below); on success store under
   `wl.decks.<id>` and return `{ ok: true, id }`; on failure `{ ok: false, error }`.
-- `await WL.DeckStore.resetProgress(deckId)` — clear `wl.srs.<deckId>`.
+- `await WL.DeckStore.resetProgress(deckId)` - clear `wl.srs.<deckId>`.
 
 Deck schema (the object shape; imported decks are pasted/loaded as this JSON):
 ```json
 {
   "id": "bundled:spanish-starter",
-  "name": "Spanish — Starter 40",
+  "name": "Spanish - Starter 40",
   "lang": "es",
   "cards": [
     { "id": "es-0001", "front": "el perro", "back": "the dog", "example": "El perro corre en el parque." }
@@ -140,26 +140,26 @@ Deck schema (the object shape; imported decks are pasted/loaded as this JSON):
 The **bundled** deck ships as `decks/spanish-starter.js` wrapping that exact object:
 ```js
 var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
-WL.__bundledDeck = { "id": "bundled:spanish-starter", "name": "Spanish — Starter 40", "lang": "es", "cards": [ /* ... */ ] };
+WL.__bundledDeck = { "id": "bundled:spanish-starter", "name": "Spanish - Starter 40", "lang": "es", "cards": [ /* ... */ ] };
 ```
 Import validation: `name` (string), `lang` (string), `cards` (non-empty array; each card needs a
 non-empty `front` and `back`; `id` auto-assigned if missing as `imp-<index>`; `example` optional).
 Imported decks get id `imported:<slug-of-name>`.
 
-### WL.Detector  (Approach A — the only Claude-specific code)
+### WL.Detector  (Approach A - the only Claude-specific code)
 Emits generation start/end. Defensive: a CONFIG block of candidate selectors at the top of the
 file, documented as the thing to update if Claude.ai changes.
 
-- `WL.Detector.start({ onStart, onEnd })` — begin observing; call `onStart()` on the false→true
+- `WL.Detector.start({ onStart, onEnd })` - begin observing; call `onStart()` on the false→true
   transition of "is generating", `onEnd()` on true→false.
 - `WL.Detector.stop()`.
 - `WL.Detector.isGenerating()` → boolean (current evaluation; also used by the dev hotkey/tests).
-- `WL.Detector.debugSelectors()` → `[{ selector, matched: boolean, count: number }]` — evaluates
+- `WL.Detector.debugSelectors()` → `[{ selector, matched: boolean, count: number }]` - evaluates
   **every** candidate selector right now. The dev hotkey logs this whole array so Jonathan can
   identify the correct live selector in one session instead of edit-reload cycles.
 - Implementation:
-  - `CONFIG.GENERATING_SELECTORS` — array of CSS selectors; if **any** matches a visible element,
-    a generation is in progress. Primary guess: a stop control —
+  - `CONFIG.GENERATING_SELECTORS` - array of CSS selectors; if **any** matches a visible element,
+    a generation is in progress. Primary guess: a stop control -
     `'button[aria-label*="Stop" i]'`, `'button[aria-label*="stop response" i]'`,
     `'[data-testid*="stop" i]'`. Secondary fallback guess: a thinking indicator. Each entry
     commented `// VERIFY on live claude.ai`.
@@ -172,17 +172,17 @@ file, documented as the thing to update if Claude.ai changes.
   Claude.ai**; the dev hotkey lets every other part be tested without correct selectors.
 
 ### WL.Card  (Shadow-DOM floating UI)
-- `WL.Card.show(card, { onAnswer })` — `card: { front, back, example?, lang? }`. Render the FRONT
+- `WL.Card.show(card, { onAnswer })` - `card: { front, back, example?, lang? }`. Render the FRONT
   state and fade in (bottom-right fixed). `onAnswer(gotIt: boolean)` fires when the user taps
   "Got it" / "Missed".
 - `WL.Card.isVisible()` → boolean.
 - `WL.Card.isAwaitingAnswer()` → boolean (revealed and waiting for an answer; content.js uses this
   to avoid auto-dismissing a card mid-rep).
-- `WL.Card.dismiss()` — fade out and remove from view (no answer recorded).
+- `WL.Card.dismiss()` - fade out and remove from view (no answer recorded).
 - One host `<div>` appended to `document.body` once, with `attachShadow({mode:'open'})`; reused.
   All CSS lives inside the shadow root via a **constructable stylesheet**
   (`const sheet = new CSSStyleSheet(); sheet.replaceSync(CSS); shadow.adoptedStyleSheets = [sheet];`)
-  — **not** an injected `<style>` text node, which can trip claude.ai's `style-src` CSP. Card states: FRONT
+  - **not** an injected `<style>` text node, which can trip claude.ai's `style-src` CSP. Card states: FRONT
   (front text + language tag + "tap to reveal") → REVEALED (back + optional example + two buttons).
   Clicking the front (or the reveal affordance) transitions FRONT→REVEALED. Only one card at a time.
 
@@ -270,7 +270,7 @@ wait-and-learn/
 ```json
 {
   "manifest_version": 3,
-  "name": "Wait & Learn — Flashcards while Claude thinks",
+  "name": "Wait & Learn - Flashcards while Claude thinks",
   "version": "0.1.0",
   "description": "Turns Claude.ai thinking time into spaced-repetition language flashcards.",
   "permissions": ["storage"],

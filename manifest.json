@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Wait & Learn — Flashcards while Claude thinks",
+  "name": "Wait & Learn: Flashcards while Claude thinks",
   "version": "0.1.0",
   "description": "Turns Claude.ai thinking time into spaced-repetition language flashcards.",
   "permissions": ["storage"],

@@ -1,13 +1,13 @@
 var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
 
-// content.js — wiring: Detector -> Scheduler/DeckStore -> Card.
+// content.js - wiring: Detector -> Scheduler/DeckStore -> Card.
 // No exports. Fail silent throughout; never throw into the claude.ai page.
 (function () {
   // Top-frame only. all_frames:false already prevents iframe injection;
   // this is belt-and-suspenders and also covers the hotkey listener below.
   if (window.top !== window) return;
 
-  // now() — single place that wraps Date.now(), easy to stub.
+  // now() - single place that wraps Date.now(), easy to stub.
   function now() {
     return Date.now();
   }
@@ -50,7 +50,7 @@ var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
 
       WL.Card.show(card, { onAnswer: onAnswer });
     } catch (e) {
-      // Fail silent — never throw into the page.
+      // Fail silent - never throw into the page.
     }
   }
 
@@ -62,9 +62,9 @@ var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
   // true -> false transition of "is generating".
   function onEnd() {
     try {
-      // Card revealed and waiting for an answer — keep it, don't lose the rep.
+      // Card revealed and waiting for an answer - keep it, don't lose the rep.
       if (WL.Card.isAwaitingAnswer()) return;
-      // Card shown but still on FRONT (unanswered) — mark seen so it isn't
+      // Card shown but still on FRONT (unanswered) - mark seen so it isn't
       // immediately re-picked, then dismiss.
       if (WL.Card.isVisible()) {
         var state = WL.Scheduler.markSeen(currentState, now());
@@ -93,7 +93,7 @@ var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
     }
   }
 
-  // Dev hotkey: Ctrl+Shift+L — force-pick & show a card, and log the
+  // Dev hotkey: Ctrl+Shift+L - force-pick & show a card, and log the
   // match-state of every candidate selector so the live selector can be
   // confirmed in one session.
   function onKeyDown(ev) {
@@ -116,7 +116,7 @@ var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
           document.addEventListener("keydown", onKeyDown, true);
         })
         .catch(function () {
-          // init failed — never throw into the page; no card will show.
+          // init failed - never throw into the page; no card will show.
         });
     } catch (e) {
       // Fail silent.

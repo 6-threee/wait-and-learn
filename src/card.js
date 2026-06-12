@@ -1,6 +1,6 @@
 var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
 
-// WL.Card — Shadow-DOM floating flashcard UI.
+// WL.Card - Shadow-DOM floating flashcard UI.
 // One host <div> appended to document.body once, reused for every card.
 // All CSS lives inside the shadow root via a constructable stylesheet
 // (adoptedStyleSheets) so it cannot trip claude.ai's style-src CSP.

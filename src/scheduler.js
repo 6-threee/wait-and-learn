@@ -1,6 +1,6 @@
 var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
 
-// WL.Scheduler — pure Leitner-box spaced-repetition logic.
+// WL.Scheduler - pure Leitner-box spaced-repetition logic.
 // No DOM, no storage, no randomness. Never mutates inputs; returns new objects.
 WL.Scheduler = (function () {
   // Interval per box (ms): box 1 = 1 min ... box 5 = 4 days.

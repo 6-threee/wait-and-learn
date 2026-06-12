@@ -1,6 +1,6 @@
 var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
 
-// WL.Detector — Approach A: watch the "generating" signal on claude.ai.
+// WL.Detector - Approach A: watch the "generating" signal on claude.ai.
 //
 // This is the ONLY Claude-specific module. The selectors below are BEST-GUESS
 // and MUST be confirmed against the live claude.ai DOM. Use the dev hotkey
@@ -65,7 +65,7 @@ var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
         try {
           nodes = document.querySelectorAll(CONFIG.GENERATING_SELECTORS[i]);
         } catch (e) {
-          continue; // bad/unsupported selector — skip, never throw
+          continue; // bad/unsupported selector - skip, never throw
         }
         for (var j = 0; j < nodes.length; j++) {
           if (isVisible(nodes[j])) return true;
@@ -81,7 +81,7 @@ var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
   function applySignal(signal) {
     try {
       if (signal) {
-        // Cancel any pending "end" — we are (still) generating.
+        // Cancel any pending "end" - we are (still) generating.
         if (endTimer !== null) {
           clearTimeout(endTimer);
           endTimer = null;
@@ -96,7 +96,7 @@ var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
           }, CONFIG.START_DEBOUNCE_MS);
         }
       } else {
-        // Cancel any pending "start" — signal dropped before it stabilized.
+        // Cancel any pending "start" - signal dropped before it stabilized.
         if (startTimer !== null) {
           clearTimeout(startTimer);
           startTimer = null;
@@ -157,7 +157,7 @@ var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
 
   function start(opts) {
     try {
-      // Top-frame only — no-op inside iframes.
+      // Top-frame only - no-op inside iframes.
       if (window.top !== window) return;
       if (running) return;
 

@@ -1,4 +1,4 @@
-# Wait & Learn — Flashcards while Claude thinks
+# Wait & Learn: Flashcards while Claude thinks
 
 A Chrome (MV3) browser extension that fills the dead time while **Claude.ai** is
 generating a response with a single, glanceable language flashcard. Tap to reveal
