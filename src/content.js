@@ -19,6 +19,11 @@ var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
   var currentId = null;
   var currentState = null;
 
+  // True while Claude is generating (between Detector onStart and onEnd). Drives
+  // the "keep feeding cards until done thinking" loop: after each answer, if we
+  // are still generating, the next due card is shown.
+  var generating = false;
+
   // Pick a due card and show it. Used by onStart and the dev hotkey.
   function pickAndShow() {
     try {
@@ -56,12 +61,15 @@ var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
 
   // false -> true transition of "is generating".
   function onStart() {
+    generating = true;
     pickAndShow();
   }
 
   // true -> false transition of "is generating".
   function onEnd() {
     try {
+      // Generation is done: stop the card-feeding loop.
+      generating = false;
       // Card revealed and waiting for an answer - keep it, don't lose the rep.
       if (WL.Card.isAwaitingAnswer()) return;
       // Card shown but still on FRONT (unanswered) - mark seen so it isn't
@@ -88,6 +96,15 @@ var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
       currentId = null;
       currentState = null;
       WL.DeckStore.saveState(id, state).catch(function () {});
+
+      // Keep going while Claude is still thinking: after the current card fades
+      // out, show the next due card. Guarded so a generation that ended during
+      // the delay does not pop one more card after Claude finished.
+      if (generating) {
+        setTimeout(function () {
+          if (generating && !WL.Card.isVisible()) pickAndShow();
+        }, 220);
+      }
     } catch (e) {
       // Fail silent.
     }
