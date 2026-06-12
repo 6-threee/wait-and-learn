@@ -35,7 +35,9 @@ response with a single, glanceable language flashcard. Tap to reveal the transla
 | Placement | Floating card, fixed bottom-right corner | Robust (no dependence on Claude's internal layout), glanceable |
 | Card type | Tap-to-reveal flashcard | Active recall in even a 2-second wait |
 | Scheduling | Leitner-box spaced repetition, local | Proven retention; tiny algorithm |
-| Content | Language-agnostic JSON deck | Drop in any language's word list |
+| Content | Language-agnostic deck (JSON schema) | Drop in any language's word list |
+| Bundled deck delivery | JS file assigning `WL.__bundledDeck` (not fetched JSON) | Avoids `web_accessible_resources` + `connect-src` CSP risk on claude.ai; simpler, no async fetch |
+| Card styling | Constructable stylesheet (`adoptedStyleSheets`) | Not governed by page CSP, unlike an injected `<style>` text node |
 | Storage | `chrome.storage.local` | No server; per-card SRS state persists locally |
 | Build tooling | None (vanilla JS, no bundler) | Simplest to load unpacked and iterate |
 | Test runtime | `bun test` | Bun is the only JS runtime on this machine |
@@ -100,12 +102,17 @@ Leitner boxes 1–5. Intervals by box (ms):
   is not immediately re-picked. Accepts `undefined` state (creates a fresh one first).
 - Pure: never mutates inputs; returns new objects.
 
-### WL.DeckStore  (async; chrome.storage.local + fetch of bundled decks)
+### WL.DeckStore  (async; chrome.storage.local; bundled deck via `WL.__bundledDeck` global)
 Storage keys: `wl.activeDeck` (deck id string), `wl.decks` (object `id→deck` for imported decks),
 `wl.srs.<deckId>` (object `cardId→state`). Bundled deck id: `bundled:spanish-starter`.
 
+The bundled deck is **not** fetched. `decks/spanish-starter.js` runs before `deck.js`/the options
+page and assigns the deck object to `WL.__bundledDeck`. DeckStore reads bundled decks from
+`WL.__bundledDeck` (treat as a one-element registry for now). This removes async fetch and any
+`connect-src`/`web_accessible_resources` CSP concern on claude.ai.
+
 - `await WL.DeckStore.init()` — resolve active deck (default `bundled:spanish-starter`), load its
-  cards and SRS map into memory.
+  cards (from `WL.__bundledDeck` for bundled, or `wl.decks` for imported) and the SRS map into memory.
 - `WL.DeckStore.getActiveDeck()` → `{ id, name, lang, cards: [{id, front, back, example?}] }` | null.
 - `WL.DeckStore.getEntries()` → `[{ id, card, state }]` merging active deck cards with stored SRS
   states (`state` undefined for unseen). This is the array passed to `Scheduler.pickNext` (mapped to
@@ -119,7 +126,7 @@ Storage keys: `wl.activeDeck` (deck id string), `wl.decks` (object `id→deck` f
   `wl.decks.<id>` and return `{ ok: true, id }`; on failure `{ ok: false, error }`.
 - `await WL.DeckStore.resetProgress(deckId)` — clear `wl.srs.<deckId>`.
 
-Deck schema:
+Deck schema (the object shape; imported decks are pasted/loaded as this JSON):
 ```json
 {
   "id": "bundled:spanish-starter",
@@ -129,6 +136,11 @@ Deck schema:
     { "id": "es-0001", "front": "el perro", "back": "the dog", "example": "El perro corre en el parque." }
   ]
 }
+```
+The **bundled** deck ships as `decks/spanish-starter.js` wrapping that exact object:
+```js
+var WL = (typeof window !== "undefined") ? (window.WL = window.WL || {}) : {};
+WL.__bundledDeck = { "id": "bundled:spanish-starter", "name": "Spanish — Starter 40", "lang": "es", "cards": [ /* ... */ ] };
 ```
 Import validation: `name` (string), `lang` (string), `cards` (non-empty array; each card needs a
 non-empty `front` and `back`; `id` auto-assigned if missing as `imp-<index>`; `example` optional).
@@ -142,6 +154,9 @@ file, documented as the thing to update if Claude.ai changes.
   transition of "is generating", `onEnd()` on true→false.
 - `WL.Detector.stop()`.
 - `WL.Detector.isGenerating()` → boolean (current evaluation; also used by the dev hotkey/tests).
+- `WL.Detector.debugSelectors()` → `[{ selector, matched: boolean, count: number }]` — evaluates
+  **every** candidate selector right now. The dev hotkey logs this whole array so Jonathan can
+  identify the correct live selector in one session instead of edit-reload cycles.
 - Implementation:
   - `CONFIG.GENERATING_SELECTORS` — array of CSS selectors; if **any** matches a visible element,
     a generation is in progress. Primary guess: a stop control —
@@ -165,7 +180,9 @@ file, documented as the thing to update if Claude.ai changes.
   to avoid auto-dismissing a card mid-rep).
 - `WL.Card.dismiss()` — fade out and remove from view (no answer recorded).
 - One host `<div>` appended to `document.body` once, with `attachShadow({mode:'open'})`; reused.
-  All CSS lives inside the shadow root (string injected into a `<style>`). Card states: FRONT
+  All CSS lives inside the shadow root via a **constructable stylesheet**
+  (`const sheet = new CSSStyleSheet(); sheet.replaceSync(CSS); shadow.adoptedStyleSheets = [sheet];`)
+  — **not** an injected `<style>` text node, which can trip claude.ai's `style-src` CSP. Card states: FRONT
   (front text + language tag + "tap to reveal") → REVEALED (back + optional example + two buttons).
   Clicking the front (or the reveal affordance) transitions FRONT→REVEALED. Only one card at a time.
 
@@ -180,12 +197,14 @@ file, documented as the thing to update if Claude.ai changes.
 5. `onAnswer(gotIt)`: `state = Scheduler.answer(prevState, gotIt, now())`; `DeckStore.saveState`;
    `WL.Card.dismiss()`.
 6. Dev hotkey **Ctrl+Shift+L**: force-pick and show a card (test UI + SRS without a real
-   generation). Logs which detector selector (if any) currently matches, to help confirm selectors.
+   generation), and `console.table(WL.Detector.debugSelectors())` so Jonathan sees the match-state
+   of every candidate selector at once to confirm/adjust the live selector.
 7. `now()` helper wraps `Date.now()` (one place, easy to stub).
 
 ### Options page (`options/`)
-`options.html` + `options.js` + `options.css`. Uses `WL.DeckStore` (load deck.js + scheduler.js on
-the page too). Features: active-deck dropdown (bundled + imported); import a deck (paste JSON in a
+`options.html` + `options.js` + `options.css`. Loads `../src/scheduler.js`,
+`../decks/spanish-starter.js`, `../src/deck.js` via `<script>` tags (so `WL.DeckStore` and
+`WL.__bundledDeck` exist), then `options.js`. Features: active-deck dropdown (bundled + imported); import a deck (paste JSON in a
 textarea **or** choose a `.json` file) with inline validation feedback; simple stats for the active
 deck (total cards, due now, count per box); "Reset progress" button with a confirm.
 
@@ -222,8 +241,9 @@ Claude finishes → Detector.onEnd
 - **Manual QA (on Jonathan's machine):** load unpacked → open claude.ai → send a prompt → confirm a
   card fades in and the reveal/answer flow works → confirm the card fades when Claude finishes if
   untouched, and persists if mid-answer. Use **Ctrl+Shift+L** to test rendering/SRS without waiting,
-  and to read the console line reporting which generating-selector matched (to confirm/adjust the
-  Detector CONFIG against the live DOM).
+  and to read the `console.table` of every candidate selector's match-state (to confirm/adjust the
+  Detector CONFIG against the live DOM). **Confirm there are no CSP errors in the console** on
+  claude.ai (the constructable stylesheet + JS-global bundled deck are designed to avoid them).
 - DOM detection itself is not unit-tested (it depends on Claude's live markup); it is isolated and
   manually verified.
 
@@ -237,7 +257,7 @@ wait-and-learn/
   src/detector.js
   src/card.js
   src/content.js
-  decks/spanish-starter.json
+  decks/spanish-starter.js
   options/options.html
   options/options.js
   options/options.css
@@ -257,13 +277,10 @@ wait-and-learn/
   "host_permissions": ["https://claude.ai/*"],
   "content_scripts": [{
     "matches": ["https://claude.ai/*"],
-    "js": ["src/scheduler.js","src/deck.js","src/detector.js","src/card.js","src/content.js"],
+    "js": ["src/scheduler.js","decks/spanish-starter.js","src/deck.js","src/detector.js","src/card.js","src/content.js"],
     "run_at": "document_idle",
     "all_frames": false
   }],
-  "web_accessible_resources": [
-    { "resources": ["decks/*.json"], "matches": ["https://claude.ai/*"] }
-  ],
   "options_page": "options/options.html"
 }
 ```
