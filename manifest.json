@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Wait & Learn — Flashcards while Claude thinks",
+  "version": "0.1.0",
+  "description": "Turns Claude.ai thinking time into spaced-repetition language flashcards.",
+  "permissions": ["storage"],
+  "host_permissions": ["https://claude.ai/*"],
+  "content_scripts": [{
+    "matches": ["https://claude.ai/*"],
+    "js": ["src/scheduler.js","decks/spanish-starter.js","src/deck.js","src/detector.js","src/card.js","src/content.js"],
+    "run_at": "document_idle",
+    "all_frames": false
+  }],
+  "options_page": "options/options.html"
+}

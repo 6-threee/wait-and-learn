@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wait &amp; Learn — Options</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <h1>Wait &amp; Learn</h1>
+      <p class="sub">Flashcards while Claude thinks</p>
+    </header>
+
+    <section class="panel">
+      <h2>Active deck</h2>
+      <label class="field">
+        <span class="label">Deck</span>
+        <select id="active-deck"></select>
+      </label>
+    </section>
+
+    <section class="panel">
+      <h2>Stats</h2>
+      <div id="stats" class="stats">
+        <div class="stat">
+          <span class="stat-num" id="stat-total">0</span>
+          <span class="stat-label">total cards</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" id="stat-due">0</span>
+          <span class="stat-label">due now</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" id="stat-new">0</span>
+          <span class="stat-label">new (unseen)</span>
+        </div>
+      </div>
+      <div class="boxes">
+        <h3>By Leitner box</h3>
+        <ul id="boxes" class="box-list"></ul>
+      </div>
+      <p id="stats-empty" class="empty hidden">This deck is empty.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Import a deck</h2>
+      <p class="hint">Paste a deck as JSON below, or choose a <code>.json</code> file.</p>
+      <label class="field">
+        <span class="label">Paste JSON</span>
+        <textarea id="import-text" rows="8" placeholder='{ "name": "My deck", "lang": "es", "cards": [ { "front": "el perro", "back": "the dog" } ] }'></textarea>
+      </label>
+      <div class="row">
+        <button id="import-btn" type="button">Import pasted JSON</button>
+      </div>
+      <label class="field">
+        <span class="label">Or choose a file</span>
+        <input id="import-file" type="file" accept=".json,application/json" />
+      </label>
+      <p id="import-msg" class="msg hidden"></p>
+    </section>
+
+    <section class="panel danger">
+      <h2>Reset progress</h2>
+      <p class="hint">Clears all spaced-repetition state for the active deck. Cards stay; review history is wiped.</p>
+      <button id="reset-btn" type="button" class="danger-btn">Reset progress</button>
+      <p id="reset-msg" class="msg hidden"></p>
+    </section>
+  </main>
+
+  <script src="../src/scheduler.js"></script>
+  <script src="../decks/spanish-starter.js"></script>
+  <script src="../src/deck.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
