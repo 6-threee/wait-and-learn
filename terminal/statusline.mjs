@@ -12,7 +12,7 @@
 // Fail-silent: prints nothing on error rather than break the status bar.
 import fs from "fs";
 import { execSync } from "child_process";
-import { deck, Scheduler, loadSrs, saveSrs, loadRhythm, saveRhythm, loadConfig, entries } from "./store.mjs";
+import { deck, Scheduler, loadSrs, loadExposure, saveExposure, loadRhythm, saveRhythm, loadConfig, entries } from "./store.mjs";
 
 // How many refreshes the revealed answer lingers before auto-advancing if you
 // do not grade it. With refreshInterval 3, 2 = the answer shows for ~6s.
@@ -30,8 +30,9 @@ try {
   const deckId = deck.id || "deck";
   const now = Date.now();
 
-  const srs = loadSrs(deckId);
-  function pickId() { return Scheduler.pickNext(entries(srs), now); }
+  const srs = loadSrs(deckId);              // box state (read-only here)
+  const exposure = loadExposure(deckId);    // exposure state (the status line owns this)
+  function pickId() { return Scheduler.pickNext(entries(srs, exposure), now); }
 
   // Advance from the previous (displayed) state to the state to show THIS run.
   const prev = loadRhythm();
@@ -43,11 +44,11 @@ try {
   } else {
     const rc = (prev.revealCount || 0) + 1;
     if (rc >= REVEAL_TICKS) {
-      // Exposure memory: mark the finished card seen (updates lastSeen only, no
-      // box change). pickNext's lastSeen tiebreak then surfaces a different,
-      // less-recently-seen card next, so the deck rotates rather than repeating.
-      srs[prev.cardId] = Scheduler.markSeen(srs[prev.cardId], now);
-      saveSrs(deckId, srs);
+      // Exposure memory: record that the finished card was just seen (lastSeen) in
+      // the EXPOSURE file only — never the box file — so this ~3s write can't
+      // race-revert a grade. pickNext's lastSeen tiebreak then rotates the deck.
+      exposure[prev.cardId] = { lastSeen: now };
+      saveExposure(deckId, exposure);
       cur = { deckId: deckId, cardId: pickId() || prev.cardId, phase: "front", revealCount: 0 };
     } else {
       cur = { deckId: deckId, cardId: prev.cardId, phase: "reveal", revealCount: rc };

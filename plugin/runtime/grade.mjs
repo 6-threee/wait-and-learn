@@ -33,9 +33,13 @@ try {
   }
 
   const now = Date.now();
-  const srs = loadSrs(deckId);
-  srs[r.cardId] = Scheduler.answer(srs[r.cardId], gotIt, now);
-  saveSrs(deckId, srs);
+  const srs = loadSrs(deckId);                          // box state only
+  const next = Scheduler.answer(srs[r.cardId], gotIt, now);
+  srs[r.cardId] = { box: next.box, dueAt: next.dueAt }; // persist box state only
+  if (!saveSrs(deckId, srs)) {
+    console.log("Wait & Learn: couldn't save your grade (disk write failed). Try again.");
+    process.exit(0);
+  }
 
   // Clear the rhythm so the next status-line refresh starts on a fresh card
   // (the scheduler will not re-pick the one just graded up).
