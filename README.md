@@ -1,12 +1,49 @@
-# Agora: Flashcards while Claude thinks
+# Agora — flashcards while Claude thinks
 
-A Chrome (MV3) browser extension that fills the dead time while **Claude.ai** is
-generating a response with a single, glanceable language flashcard. Tap to reveal
-the translation, mark "Got it" or "Missed", and a lightweight spaced-repetition
-scheduler decides what to show next.
+*Agora* ("now" in Portuguese) turns the seconds you spend waiting on Claude into
+language practice. The main product is a **Claude Code plugin**: your vocabulary
+shows in Claude Code's thinking spinner while it works, backed by real spaced
+repetition. Free, no account, nothing leaves your machine. Five languages
+bundled (Spanish, French, German, Italian, Portuguese), 250 words each.
 
-It only runs on `https://claude.ai/*`. It never sends a network request, has no
-account or server, and stores all progress locally in `chrome.storage.local`.
+## Install (Claude Code plugin)
+
+```sh
+claude plugin marketplace add 6-threee/agora
+claude plugin install agora@agora
+```
+
+Then **restart Claude Code** so the commands load, and run:
+
+```
+/agora:setup spinner
+```
+
+Restart once more, and your vocabulary shows up in Claude Code's thinking
+spinner while it works. (Needs `bun` or `node` on your PATH; the spinner needs
+Claude Code 2.1.143+. Prefer an always-visible card instead? Use `/agora:setup`
+for status-line mode.)
+
+### Commands
+
+- `/agora:setup spinner` — flashcards in the thinking spinner bar
+- `/agora:deck <language>` — switch language (spanish · french · german · italian · portuguese)
+- `/agora:study` — pop a spaced-repetition review session into its own terminal (recall → reveal → grade)
+- `/agora:pause` / `/agora:resume` — hide/show the cards during deep focus
+
+### Support
+
+Agora is free and always will be. If it helps you, pay what you want (including
+nothing): **https://myaibiz.gumroad.com/l/keyulq**
+
+---
+
+## Browser extension (claude.ai)
+
+There is also a Chrome (MV3) extension that shows the same flashcards on
+**claude.ai** in the browser. It only runs on `https://claude.ai/*`, never sends
+a network request, has no account or server, and stores progress locally in
+`chrome.storage.local`.
 
 ## How to load it (unpacked)
 
