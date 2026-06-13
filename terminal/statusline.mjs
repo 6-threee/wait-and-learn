@@ -25,6 +25,9 @@ try {
 
   if (!deck || !Scheduler || !Array.isArray(deck.cards) || !deck.cards.length) process.exit(0);
 
+  // Focus mode: /agora:pause renders nothing (live, every refresh).
+  if (loadConfig().paused) process.exit(0);
+
   const byId = {};
   deck.cards.forEach(function (c) { byId[c.id] = c; });
   const deckId = deck.id || "deck";

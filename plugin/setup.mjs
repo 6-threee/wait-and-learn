@@ -73,7 +73,9 @@ try {
     '  review) exec "$RUN" "$RT/review.mjs" ;;',
     '  stats) exec "$RUN" "$RT/stats.mjs" ;;',
     '  deck) shift; exec "$RUN" "$RT/deck.mjs" "$@" ;;',
-    '  *) echo "Agora: agora review (study) | agora stats | agora deck [language]" ;;',
+    '  pause) exec "$RUN" "$RT/pause.mjs" pause ;;',
+    '  resume) exec "$RUN" "$RT/pause.mjs" resume ;;',
+    '  *) echo "Agora: agora review | agora stats | agora deck [lang] | agora pause | agora resume" ;;',
     "esac",
     ""
   ].join("\n");
