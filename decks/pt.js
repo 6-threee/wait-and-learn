@@ -84,7 +84,7 @@ var deck = {
     { "id": "pt-0078", "front": "às vezes", "back": "sometimes", "example": "Às vezes eu corro de manhã." },
     { "id": "pt-0079", "front": "cedo", "back": "early", "example": "Acordei muito cedo hoje." },
     { "id": "pt-0080", "front": "tarde", "back": "late", "example": "Ele chegou tarde na festa." },
-    { "id": "pt-0081", "front": "a hora", "back": "the hour / time", "example": "Que hora são agora?" },
+    { "id": "pt-0081", "front": "a hora", "back": "the hour / time", "example": "Que horas são agora?" },
     { "id": "pt-0082", "front": "o dia", "back": "the day", "example": "Tenha um bom dia!" },
     { "id": "pt-0083", "front": "a semana", "back": "the week", "example": "A semana passou rápido." },
     { "id": "pt-0084", "front": "o mês", "back": "the month", "example": "Esse mês foi difícil." },
