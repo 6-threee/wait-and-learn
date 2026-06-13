@@ -33,9 +33,17 @@ try {
   }
 
   const now = Date.now();
-  const srs = loadSrs(deckId);                          // box state only
+  const srs = loadSrs(deckId);                          // box state + counters
+  // Pass the RAW state (may be undefined) to answer() so its `|| newState`
+  // fallback works; read counters from a safe copy.
+  const prevCounts = srs[r.cardId] || {};
   const next = Scheduler.answer(srs[r.cardId], gotIt, now);
-  srs[r.cardId] = { box: next.box, dueAt: next.dueAt }; // persist box state only
+  srs[r.cardId] = {
+    box: next.box,
+    dueAt: next.dueAt,
+    attempts: (prevCounts.attempts || 0) + 1,
+    correct: (prevCounts.correct || 0) + (gotIt ? 1 : 0)
+  };
   if (!saveSrs(deckId, srs)) {
     console.log("Agora: couldn't save your grade (disk write failed). Try again.");
     process.exit(0);

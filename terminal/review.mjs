@@ -48,6 +48,7 @@ const rl = createInterface({ input: process.stdin, output: process.stdout });
 let state = "front";   // "front" (awaiting reveal/skip/quit) | "reveal" (awaiting grade)
 let currentId = null;
 let graded = 0;
+let correctThisSession = 0;
 
 function frontPrompt(c) {
   return `📘 ${dim}${lang}${reset}  ${bold}${cyan}${c.front}${reset}   ${dim}[Enter] reveal · s skip · q quit${reset} `;
@@ -64,10 +65,19 @@ function showNext() {
   rl.prompt();
 }
 function gradeCurrent(gotIt) {
+  // Pass the RAW state (may be undefined) to answer() so its `|| newState`
+  // fallback works; read counters from a safe copy.
+  const prevCounts = srs[currentId] || {};
   const n = Scheduler.answer(srs[currentId], gotIt, Date.now());
-  srs[currentId] = { box: n.box, dueAt: n.dueAt };
+  srs[currentId] = {
+    box: n.box,
+    dueAt: n.dueAt,
+    attempts: (prevCounts.attempts || 0) + 1,
+    correct: (prevCounts.correct || 0) + (gotIt ? 1 : 0)
+  };
   if (saveSrs(deckId, srs)) {
     graded++;
+    if (gotIt) correctThisSession++;
     refreshSpinner();
     console.log(`   ${gotIt ? green + "✓ got it" : yellow + "✗ missed"}${reset}  (box ${n.box})\n`);
   } else {
@@ -106,6 +116,8 @@ rl.on("line", function (raw) {
 });
 
 rl.on("close", function () {
-  console.log(`\n${dim}Session done. ${graded} graded. ¡Hasta luego!${reset}`);
+  const pct = graded > 0 ? Math.round((correctThisSession / graded) * 100) : 0;
+  const tally = graded > 0 ? `${graded} graded, ${correctThisSession} correct (${pct}%)` : "0 graded";
+  console.log(`\n${dim}Session done. ${tally}. ¡Hasta luego!${reset}`);
   process.exit(0);
 });

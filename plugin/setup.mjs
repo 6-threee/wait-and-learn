@@ -71,8 +71,9 @@ try {
     'if command -v bun >/dev/null 2>&1; then RUN=bun; else RUN=node; fi',
     'case "$1" in',
     '  review) exec "$RUN" "$RT/review.mjs" ;;',
+    '  stats) exec "$RUN" "$RT/stats.mjs" ;;',
     '  deck) shift; exec "$RUN" "$RT/deck.mjs" "$@" ;;',
-    '  *) echo "Agora: agora review   (study loop)   |   agora deck [language]" ;;',
+    '  *) echo "Agora: agora review (study) | agora stats | agora deck [language]" ;;',
     "esac",
     ""
   ].join("\n");
