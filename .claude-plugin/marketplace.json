@@ -8,7 +8,7 @@
     {
       "name": "agora",
       "source": "./plugin",
-      "description": "Language flashcards in your Claude Code status line, with spaced repetition. Run /agora:setup to wire it in, then /agora:wl got | missed to grade the word on screen."
+      "description": "Language flashcards in Claude Code's thinking spinner bar - learn a language in the seconds you wait on AI. Spaced repetition, 5 languages (250 words each), free. /agora:setup to install, /agora:deck to switch language, /agora:study to pop a review session into its own terminal."
     }
   ]
 }
