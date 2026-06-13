@@ -1,4 +1,4 @@
-# Wait & Learn: Flashcards while Claude thinks
+# Agora: Flashcards while Claude thinks
 
 A Chrome (MV3) browser extension that fills the dead time while **Claude.ai** is
 generating a response with a single, glanceable language flashcard. Tap to reveal
@@ -73,7 +73,7 @@ selectors are confirmed.
 The browser card needs a web page, so it cannot run in Claude Code in the
 terminal. The terminal version is a **status-line** flashcard instead, in Claude
 Code's bottom bar. It reads the **same deck** and runs the **same Leitner
-scheduler** as the browser (with its own state under `~/.wait-and-learn/`,
+scheduler** as the browser (with its own state under `~/.agora/`,
 separate from the browser's storage).
 
 What it does:
@@ -99,7 +99,7 @@ Add this to `~/.claude/settings.json` (replaces the default bottom bar):
 {
   "statusLine": {
     "type": "command",
-    "command": "~/.bun/bin/bun ~/Desktop/wait-and-learn/terminal/statusline.js",
+    "command": "~/.bun/bin/bun ~/Desktop/wait-and-learn/terminal/statusline.mjs",
     "refreshInterval": 3
   }
 }
@@ -112,7 +112,7 @@ it to slow down, remove it to change only per turn.
 
 ### Set up the `wl` grading command
 
-`terminal/wl` is a wrapper around `terminal/grade.js`. Add an alias so you can
+`terminal/wl` is a wrapper around `terminal/grade.mjs`. Add an alias so you can
 just type `wl got`:
 
 ```sh
@@ -138,8 +138,8 @@ not. It prints a one-line confirmation and the status line moves to a fresh card
 The `terminal/` setup above is the hand-wired version for this machine. To
 distribute the terminal version to other people, there is a Claude Code **plugin**
 in `plugin/` (installed from the marketplace at `.claude-plugin/marketplace.json`).
-It bundles a self-contained runtime and ships a `/wait-and-learn:setup` command
-that copies the runtime to `~/.wait-and-learn/runtime/` and wires the status line
+It bundles a self-contained runtime and ships a `/agora:setup` command
+that copies the runtime to `~/.agora/runtime/` and wires the status line
 into the user's settings (keeping any existing one). See `plugin/README.md`.
 
 ## Importing a deck

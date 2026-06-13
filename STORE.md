@@ -1,6 +1,6 @@
 # Chrome Web Store listing assets
 
-Everything needed to publish Wait & Learn. The code is store-ready; this file holds the
+Everything needed to publish Agora. The code is store-ready; this file holds the
 copy, the data disclosures, and the asset checklist.
 
 ## One-time setup
@@ -10,13 +10,13 @@ copy, the data disclosures, and the asset checklist.
 
 ## Listing copy
 
-**Name:** Wait & Learn: Flashcards while Claude thinks
+**Name:** Agora: Flashcards while Claude thinks
 
 **Summary (132 chars max):**
 Turn Claude's thinking time into language practice. A spaced-repetition flashcard appears while Claude generates its reply.
 
 **Description:**
-Wait & Learn fills the few seconds while Claude is generating a response with one quick language
+Agora fills the few seconds while Claude is generating a response with one quick language
 flashcard. See the word, try to recall it, tap to reveal the translation, and mark "Got it" or
 "Missed". A lightweight spaced-repetition scheduler (Leitner boxes) shows the words you are still
 learning more often.

@@ -1,14 +1,14 @@
-// Wait & Learn - list your decks or switch the active one.
+// Agora - list your decks or switch the active one.
 //   deck            list available decks (→ marks the active one)
 //   deck <word>     switch active deck, matched by language code, id, or name
-// Pro decks appear here once their files are in ~/.wait-and-learn/decks/.
+// Pro decks appear here once their files are in ~/.agora/decks/.
 import fs from "fs";
 import os from "os";
 import path from "path";
 import { decks, deck as activeDeck, saveRhythm } from "./store.mjs";
 
 const arg = String(process.argv.slice(2).join(" ") || "").trim().toLowerCase();
-const cfgPath = path.join(os.homedir(), ".wait-and-learn", "config.json");
+const cfgPath = path.join(os.homedir(), ".agora", "config.json");
 
 function readCfg() { try { return JSON.parse(fs.readFileSync(cfgPath, "utf8")) || {}; } catch (e) { return {}; } }
 function writeCfg(o) {
@@ -23,7 +23,7 @@ function writeCfg(o) {
 
 try {
   if (!decks || !decks.length) {
-    console.log("Wait & Learn: no decks found. Run /wait-and-learn:setup first.");
+    console.log("Agora: no decks found. Run /agora:setup first.");
     process.exit(0);
   }
 
@@ -32,8 +32,8 @@ try {
       const mark = (activeDeck && d.id === activeDeck.id) ? "→" : " ";
       return ` ${mark} ${d.name}  (${d.lang}, ${d.cards.length} cards)`;
     });
-    const pro = decks.length > 1 ? "" : "\nUnlock more languages with Wait & Learn Pro.";
-    console.log("Your decks:\n" + lines.join("\n") + "\n\nSwitch with: /wait-and-learn:deck <language>" + pro);
+    const pro = decks.length > 1 ? "" : "\nUnlock more languages with Agora Pro.";
+    console.log("Your decks:\n" + lines.join("\n") + "\n\nSwitch with: /agora:deck <language>" + pro);
     process.exit(0);
   }
 
@@ -44,18 +44,18 @@ try {
     || decks.find(function (d) { return d.id.toLowerCase().indexOf(arg) !== -1; });
 
   if (!match) {
-    console.log(`No deck matches "${arg}". Run /wait-and-learn:deck to list them.`);
+    console.log(`No deck matches "${arg}". Run /agora:deck to list them.`);
     process.exit(0);
   }
 
   const cfg = readCfg();
   cfg.activeDeck = match.id;
   if (!writeCfg(cfg)) {
-    console.log("Wait & Learn: couldn't save your deck choice (disk write failed).");
+    console.log("Agora: couldn't save your deck choice (disk write failed).");
     process.exit(0);
   }
   saveRhythm({}); // start the next refresh fresh on the new deck
   console.log(`\x1b[32m✓\x1b[0m active deck: ${match.name} (${match.lang}, ${match.cards.length} cards)`);
 } catch (e) {
-  console.log("Wait & Learn: deck switch failed.");
+  console.log("Agora: deck switch failed.");
 }

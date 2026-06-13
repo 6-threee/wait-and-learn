@@ -1,14 +1,14 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-marketplace.json",
-  "name": "wait-and-learn",
+  "name": "agora",
   "owner": {
     "name": "Jonathan"
   },
   "plugins": [
     {
-      "name": "wait-and-learn",
+      "name": "agora",
       "source": "./plugin",
-      "description": "Language flashcards in your Claude Code status line, with spaced repetition. Run /wait-and-learn:setup to wire it in, then /wait-and-learn:wl got | missed to grade the word on screen."
+      "description": "Language flashcards in your Claude Code status line, with spaced repetition. Run /agora:setup to wire it in, then /agora:wl got | missed to grade the word on screen."
     }
   ]
 }

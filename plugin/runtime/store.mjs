@@ -1,7 +1,7 @@
 // Shared state + deck/scheduler loading for the terminal (Claude Code) flashcard.
 // Used by statusline.js (display) and grade.js (got/missed feedback). Reuses the
 // browser extension's exact deck and Leitner scheduler, with its own on-disk
-// state under ~/.wait-and-learn/ (separate from the browser's chrome.storage).
+// state under ~/.agora/ (separate from the browser's chrome.storage).
 // Everything here is fail-silent: on error it returns empty/null, never throws.
 import fs from "fs";
 import os from "os";
@@ -13,6 +13,18 @@ const require = createRequire(import.meta.url);
 // Node + bun compatible (import.meta.dir is bun-only).
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 
+// One-time state-dir migration (rename from the old brand to ~/.agora). Runs
+// before any reader below touches the state dir, so the user's SRS progress,
+// Pro decks, and active-deck config survive the rebrand. Fail-silent: a rename
+// failure leaves the old dir in place and never throws.
+(function migrateStateDir() {
+  try {
+    const oldDir = path.join(os.homedir(), ".wait-and-learn");
+    const newDir = path.join(os.homedir(), ".agora");
+    if (!fs.existsSync(newDir) && fs.existsSync(oldDir)) fs.renameSync(oldDir, newDir);
+  } catch (e) {}
+})();
+
 // Resolve a module from the first path that loads. Supports both the dev layout
 // (terminal/ next to ../src and ../decks) and the flat plugin layout (everything
 // copied into one runtime/ directory).
@@ -22,7 +34,7 @@ function tryRequire(candidates) {
 }
 
 // Decks the user has: the bundled free Starter, plus any Pro decks they have
-// unlocked by dropping deck files into ~/.wait-and-learn/decks/. That drop-in
+// unlocked by dropping deck files into ~/.agora/decks/. That drop-in
 // folder IS the Pro unlock; no license server, no network call.
 export const decks = (function loadAllDecks() {
   const out = [];
@@ -31,7 +43,7 @@ export const decks = (function loadAllDecks() {
     path.join(HERE, "..", "decks", "spanish-starter.js")   // dev layout
   ]);
   if (bundled && Array.isArray(bundled.cards)) out.push(bundled);
-  const userDir = path.join(os.homedir(), ".wait-and-learn", "decks");
+  const userDir = path.join(os.homedir(), ".agora", "decks");
   try {
     for (const f of fs.readdirSync(userDir).sort()) {
       if (!f.endsWith(".js")) continue;
@@ -49,7 +61,7 @@ export const decks = (function loadAllDecks() {
 export const deck = (function pickActive() {
   if (!decks.length) return null;
   let cfg = {};
-  try { cfg = JSON.parse(fs.readFileSync(path.join(os.homedir(), ".wait-and-learn", "config.json"), "utf8")) || {}; } catch (e) {}
+  try { cfg = JSON.parse(fs.readFileSync(path.join(os.homedir(), ".agora", "config.json"), "utf8")) || {}; } catch (e) {}
   if (cfg.activeDeck) {
     const found = decks.find(function (d) { return d.id === cfg.activeDeck; });
     if (found) return found;
@@ -63,7 +75,7 @@ export const Scheduler = tryRequire([
   path.join(HERE, "..", "src", "scheduler.js")           // dev layout
 ]);
 
-const DIR = path.join(os.homedir(), ".wait-and-learn");
+const DIR = path.join(os.homedir(), ".agora");
 
 // Self-heal orphaned temp files. A status-line process SIGKILLed between the
 // writeJson temp-write and the rename never runs its catch/unlink, leaving a

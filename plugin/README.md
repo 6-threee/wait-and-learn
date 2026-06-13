@@ -1,12 +1,12 @@
-# Wait & Learn (Claude Code plugin)
+# Agora (Claude Code plugin)
 
 Language flashcards in your Claude Code **status line**, with real spaced
 repetition. Shows a word, reveals the translation, rotates as you work, and lets
 you grade what you see.
 
-This is the terminal companion to the Wait & Learn browser extension. It reads
+This is the terminal companion to the Agora browser extension. It reads
 the same deck and runs the same Leitner scheduler, with its own progress stored
-in `~/.wait-and-learn/`.
+in `~/.agora/`.
 
 ## Install
 
@@ -14,23 +14,23 @@ Once this repo is pushed to GitHub (or any git host), users run:
 
 ```
 /plugin marketplace add <your-username>/wait-and-learn   # the repo hosting this marketplace
-/plugin install wait-and-learn@wait-and-learn
-/wait-and-learn:setup
+/plugin install agora@agora
+/agora:setup
 ```
 
 To try it locally without publishing, point at the repo on disk:
 
 ```
 /plugin marketplace add /path/to/wait-and-learn
-/plugin install wait-and-learn@wait-and-learn
-/wait-and-learn:setup
+/plugin install agora@agora
+/agora:setup
 ```
 
 Then **restart Claude Code**.
 
 ## What `setup` does
 
-- Copies the runtime to a stable `~/.wait-and-learn/runtime/` (the plugin's own
+- Copies the runtime to a stable `~/.agora/runtime/` (the plugin's own
   install path is ephemeral and changes on update, so the status line can't point
   at it).
 - Configures `statusLine` in `~/.claude/settings.json`, **backing it up first**.
@@ -43,19 +43,19 @@ Then **restart Claude Code**.
 - A flashcard rotates in your status line: `📘 ES el perro · ?` then
   `📘 ES el perro → the dog`, every few seconds.
 - Grade the word on screen:
-  - `/wait-and-learn:wl got` - you knew it (it shows up less)
-  - `/wait-and-learn:wl missed` - you didn't (it shows up more)
+  - `/agora:wl got` - you knew it (it shows up less)
+  - `/agora:wl missed` - you didn't (it shows up more)
 
 ## Decks and languages
 
 - The free plugin ships the Spanish starter deck.
 - List your decks or switch language:
-  - `/wait-and-learn:deck` - list your decks (the active one is marked)
-  - `/wait-and-learn:deck french` - switch the active deck
+  - `/agora:deck` - list your decks (the active one is marked)
+  - `/agora:deck french` - switch the active deck
 - Each deck keeps its own spaced-repetition progress, so switching never loses
   your place.
 - **Pro decks** (more languages) are delivered as files you drop into
-  `~/.wait-and-learn/decks/`. Anything in that folder loads as a deck. Deck files
+  `~/.agora/decks/`. Anything in that folder loads as a deck. Deck files
   are JavaScript and run as code, so only add decks you trust.
 
 ## Notes
@@ -63,7 +63,7 @@ Then **restart Claude Code**.
 - Requires **bun or node** on your PATH.
 - Progress is separate from the browser extension (a status line can't reach
   Chrome's storage, and vice versa). Same algorithm, two scorecards.
-- Uninstalling the plugin leaves `~/.wait-and-learn/` in place; delete it by hand
+- Uninstalling the plugin leaves `~/.agora/` in place; delete it by hand
   to remove progress, and restore your old status line from the
   `~/.claude/settings.json.wl-backup` if you want.
 - Ships the bundled Spanish deck. To change the rotation interval, edit

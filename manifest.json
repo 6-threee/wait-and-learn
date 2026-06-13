@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Wait & Learn: Flashcards while Claude thinks",
+  "name": "Agora: Flashcards while Claude thinks",
   "version": "0.2.0",
   "description": "Turns Claude.ai thinking time into spaced-repetition language flashcards.",
   "permissions": ["storage"],
@@ -17,6 +17,6 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "action": { "default_title": "Wait & Learn" },
+  "action": { "default_title": "Agora" },
   "options_page": "options/options.html"
 }

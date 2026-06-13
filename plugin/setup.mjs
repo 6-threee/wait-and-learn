@@ -1,5 +1,5 @@
-// Wait & Learn plugin installer. Run by the /wait-and-learn:setup command.
-// - Copies the bundled runtime to a STABLE dir (~/.wait-and-learn/runtime/),
+// Agora plugin installer. Run by the /agora:setup command.
+// - Copies the bundled runtime to a STABLE dir (~/.agora/runtime/),
 //   because the plugin's own install path is ephemeral (changes on update).
 // - Configures statusLine in ~/.claude/settings.json, preserving any existing
 //   one in "combined mode" (the previous bar is kept, the flashcard appended).
@@ -14,10 +14,19 @@ import { fileURLToPath } from "url";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const runtimeSrc = path.join(HERE, "runtime");
 const home = os.homedir();
-const stateDir = path.join(home, ".wait-and-learn");
+const stateDir = path.join(home, ".agora");
 const runtimeDst = path.join(stateDir, "runtime");
 const settingsPath = path.join(home, ".claude", "settings.json");
 const configPath = path.join(stateDir, "config.json");
+
+// One-time state-dir migration (rename from the old brand to ~/.agora). Runs
+// before the runtime copy creates ~/.agora, so re-running setup over an old
+// install carries the user's SRS progress, Pro decks, and config across. Its
+// own try/catch so a rename failure never aborts the otherwise fail-loud setup.
+try {
+  const oldStateDir = path.join(home, ".wait-and-learn");
+  if (!fs.existsSync(stateDir) && fs.existsSync(oldStateDir)) fs.renameSync(oldStateDir, stateDir);
+} catch (e) {}
 
 function writeAtomic(file, text) {
   const tmp = file + ".tmp." + process.pid;
@@ -28,7 +37,7 @@ function writeAtomic(file, text) {
 try {
   // 1. Copy the runtime to the stable location.
   if (!fs.existsSync(runtimeSrc)) {
-    console.log("Wait & Learn: bundled runtime not found at " + runtimeSrc + ". Aborting.");
+    console.log("Agora: bundled runtime not found at " + runtimeSrc + ". Aborting.");
     process.exit(1);
   }
   fs.mkdirSync(runtimeDst, { recursive: true });
@@ -55,7 +64,7 @@ try {
     try {
       settings = JSON.parse(rawSettings);
     } catch (e) {
-      console.log("Wait & Learn: ~/.claude/settings.json is not valid JSON; aborting without changes.");
+      console.log("Agora: ~/.claude/settings.json is not valid JSON; aborting without changes.");
       process.exit(1);
     }
   }
@@ -97,7 +106,7 @@ try {
 
   // 7. Report.
   const runtimeName = path.basename(interp);
-  console.log("✓ Wait & Learn installed.");
+  console.log("✓ Agora installed.");
   console.log("  runtime:     " + runtimeDst + "  (via " + runtimeName + ")");
   console.log("  status line: configured in ~/.claude/settings.json (refreshInterval " + settings.statusLine.refreshInterval + "s)");
   if (existed && !ours) console.log("  backup:      " + settingsPath + ".wl-backup");
@@ -108,9 +117,9 @@ try {
   }
   console.log("");
   console.log("Restart Claude Code to see it. Grade the shown word with:");
-  console.log("  /wait-and-learn:wl got      (you knew it)");
-  console.log("  /wait-and-learn:wl missed   (you didn't)");
+  console.log("  /agora:wl got      (you knew it)");
+  console.log("  /agora:wl missed   (you didn't)");
 } catch (e) {
-  console.log("Wait & Learn setup failed: " + (e && e.message ? e.message : e));
+  console.log("Agora setup failed: " + (e && e.message ? e.message : e));
   process.exit(1);
 }

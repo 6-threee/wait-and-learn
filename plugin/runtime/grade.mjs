@@ -1,4 +1,4 @@
-// Wait & Learn - grade the flashcard currently shown in the Claude Code status
+// Agora - grade the flashcard currently shown in the Claude Code status
 // line, feeding the SAME spaced-repetition state the status line reads. This is
 // the bit of interactivity a status line cannot do on its own.
 //
@@ -14,7 +14,7 @@ const missed = arg === "missed" || arg === "m" || arg === "n" || arg === "no" ||
 
 try {
   if (!deck || !Scheduler || !Array.isArray(deck.cards)) {
-    console.log("Wait & Learn: deck/scheduler not available.");
+    console.log("Agora: deck/scheduler not available.");
     process.exit(0);
   }
   if (!gotIt && !missed) {
@@ -37,7 +37,7 @@ try {
   const next = Scheduler.answer(srs[r.cardId], gotIt, now);
   srs[r.cardId] = { box: next.box, dueAt: next.dueAt }; // persist box state only
   if (!saveSrs(deckId, srs)) {
-    console.log("Wait & Learn: couldn't save your grade (disk write failed). Try again.");
+    console.log("Agora: couldn't save your grade (disk write failed). Try again.");
     process.exit(0);
   }
 
@@ -49,5 +49,5 @@ try {
   const mark = gotIt ? "\x1b[32m✓ got it\x1b[0m" : "\x1b[33m✗ missed\x1b[0m";
   console.log(`${mark}  ${card.front} → ${card.back}   (box ${srs[r.cardId].box})`);
 } catch (e) {
-  console.log("Wait & Learn: grade failed.");
+  console.log("Agora: grade failed.");
 }

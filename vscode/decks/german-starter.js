@@ -1,4 +1,4 @@
-// Wait & Learn deck. Free. Drop-in compatible with the bundled deck format.
+// Agora deck. Free. Drop-in compatible with the bundled deck format.
 var deck = {
   "id": "pro:german-starter",
   "name": "German Starter 40",

@@ -1,4 +1,4 @@
-// Wait & Learn - Claude Code status line.
+// Agora - Claude Code status line.
 // Shows a rotating language flashcard from the SAME deck the browser extension
 // uses, with real spaced repetition (shared scheduler) and a passive recall
 // rhythm: it shows the word alone first ("el perro · ?"), then reveals the

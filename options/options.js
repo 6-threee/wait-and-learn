@@ -1,4 +1,4 @@
-// Options page logic for Wait & Learn.
+// Options page logic for Agora.
 // Consumer of window.WL.DeckStore (loaded via the <script> tags before this file).
 // This is a normal extension page, so plain DOM is fine here.
 (function () {
@@ -128,7 +128,7 @@
       // init() is the documented path that loads the active deck's cards + SRS into memory.
       await refreshAll();
     } catch (e) {
-      console.error("Wait & Learn: setActiveDeck failed", e);
+      console.error("Agora: setActiveDeck failed", e);
     }
   });
 
@@ -179,7 +179,7 @@
     try {
       result = await DeckStore.importDeck(obj);
     } catch (e) {
-      console.error("Wait & Learn: importDeck threw", e);
+      console.error("Agora: importDeck threw", e);
       showMsg(importMsg, "Import failed: " + (e && e.message ? e.message : "unknown error"), false);
       return;
     }
@@ -212,7 +212,7 @@
       await refreshAll();
       showMsg(resetMsg, "Progress reset.", true);
     } catch (e) {
-      console.error("Wait & Learn: resetProgress failed", e);
+      console.error("Agora: resetProgress failed", e);
       showMsg(resetMsg, "Reset failed: " + (e && e.message ? e.message : "unknown error"), false);
     }
   });
@@ -237,11 +237,11 @@
 
   // Boot.
   if (!DeckStore) {
-    console.error("Wait & Learn: WL.DeckStore not found. Check script load order.");
+    console.error("Agora: WL.DeckStore not found. Check script load order.");
     return;
   }
   loadSpeakAuto();
   refreshAll().catch(function (e) {
-    console.error("Wait & Learn: options init failed", e);
+    console.error("Agora: options init failed", e);
   });
 })();

@@ -1,9 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
-  "name": "wait-and-learn",
-  "displayName": "Wait & Learn",
+  "name": "agora",
+  "displayName": "Agora",
   "version": "0.1.0",
-  "description": "Language flashcards in your Claude Code status line, with spaced repetition. Run /wait-and-learn:setup to wire it into your status bar, then /wait-and-learn:wl got | missed to grade the word on screen.",
+  "description": "Language flashcards in your Claude Code status line, with spaced repetition. Run /agora:setup to wire it into your status bar, then /agora:wl got | missed to grade the word on screen.",
   "author": { "name": "Jonathan" },
   "keywords": ["language", "flashcards", "spaced-repetition", "statusline", "learning"]
 }
