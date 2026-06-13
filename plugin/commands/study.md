@@ -7,5 +7,5 @@ work session. Run exactly this command and tell the user ONLY whether it opened
 (one short line), nothing else:
 
 ```!
-osascript -e 'tell application "Terminal" to activate' -e 'tell application "Terminal" to do script "$HOME/.agora/agora review"' >/dev/null 2>&1 && echo "Opened an Agora study window. Click into it: Enter = reveal, g/m/s = grade/skip, q = quit. This session stays clean." || echo "Could not open a window automatically (grant Terminal automation access, or open a new terminal with Cmd+N and run: agora review)."
+osascript -e 'tell application "Terminal" to do script "$HOME/.agora/agora review"' >/dev/null 2>&1 && echo "Opened an Agora study window. Click into it: Enter = reveal, g/m/s = grade/skip, q = quit. This session stays clean." || echo "Could not open a window automatically (grant Terminal automation access, or open a new terminal with Cmd+N and run: agora review)."
 ```
