@@ -1,7 +1,7 @@
 // Agora - list your decks or switch the active one.
 //   deck            list available decks (→ marks the active one)
 //   deck <word>     switch active deck, matched by language code, id, or name
-// Pro decks appear here once their files are in ~/.agora/decks/.
+// extra decks appear here once their files are in ~/.agora/decks/.
 import fs from "fs";
 import os from "os";
 import path from "path";
@@ -32,8 +32,8 @@ try {
       const mark = (activeDeck && d.id === activeDeck.id) ? "→" : " ";
       return ` ${mark} ${d.name}  (${d.lang}, ${d.cards.length} cards)`;
     });
-    const pro = decks.length > 1 ? "" : "\nUnlock more languages with Agora Pro.";
-    console.log("Your decks:\n" + lines.join("\n") + "\n\nSwitch with: /agora:deck <language>" + pro);
+    const hint = decks.length > 1 ? "" : "\nAdd more languages by dropping a deck file into ~/.agora/decks/.";
+    console.log("Your decks:\n" + lines.join("\n") + "\n\nSwitch with: /agora:deck <language>" + hint);
     process.exit(0);
   }
 

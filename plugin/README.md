@@ -54,7 +54,7 @@ Then **restart Claude Code**.
   - `/agora:deck french` - switch the active deck
 - Each deck keeps its own spaced-repetition progress, so switching never loses
   your place.
-- **Pro decks** (more languages) are delivered as files you drop into
+- **Extra decks** (more languages) are just files you drop into
   `~/.agora/decks/`. Anything in that folder loads as a deck. Deck files
   are JavaScript and run as code, so only add decks you trust.
 

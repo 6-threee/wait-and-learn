@@ -1,5 +1,5 @@
 ---
-description: List your Agora decks or switch the active language (Pro unlocks more).
+description: List your Agora decks or switch the active language.
 argument-hint: [language or deck name]
 ---
 

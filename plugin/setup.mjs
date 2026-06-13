@@ -21,7 +21,7 @@ const configPath = path.join(stateDir, "config.json");
 
 // One-time state-dir migration (rename from the old brand to ~/.agora). Runs
 // before the runtime copy creates ~/.agora, so re-running setup over an old
-// install carries the user's SRS progress, Pro decks, and config across. Its
+// install carries the user's SRS progress, extra decks, and config across. Its
 // own try/catch so a rename failure never aborts the otherwise fail-loud setup.
 try {
   const oldStateDir = path.join(home, ".wait-and-learn");

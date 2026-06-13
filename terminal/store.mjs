@@ -15,7 +15,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 
 // One-time state-dir migration (rename from the old brand to ~/.agora). Runs
 // before any reader below touches the state dir, so the user's SRS progress,
-// Pro decks, and active-deck config survive the rebrand. Fail-silent: a rename
+// extra decks, and active-deck config survive the rebrand. Fail-silent: a rename
 // failure leaves the old dir in place and never throws.
 (function migrateStateDir() {
   try {
@@ -33,9 +33,9 @@ function tryRequire(candidates) {
   return null;
 }
 
-// Decks the user has: the bundled free Starter, plus any Pro decks they have
-// unlocked by dropping deck files into ~/.agora/decks/. That drop-in
-// folder IS the Pro unlock; no license server, no network call.
+// Decks the user has: the bundled Starter, plus any extra decks added by
+// dropping deck files into ~/.agora/decks/. That drop-in folder is how you
+// add languages; no license server, no network call.
 export const decks = (function loadAllDecks() {
   const out = [];
   const bundled = tryRequire([
