@@ -73,7 +73,13 @@ try {
   //    keep it (the runtime prepends its output before the flashcard).
   let combined = false;
   const existingCmd = settings.statusLine && settings.statusLine.command;
-  const ours = existingCmd && existingCmd.indexOf(statuslinePath) !== -1;
+  // "ours" must also match our PRE-REBRAND self: a migrating Wait & Learn user's
+  // settings.json still points at ~/.wait-and-learn/runtime/statusline.mjs. Without
+  // this, re-setup would treat our own old status line as a foreign one, clobber
+  // the user's original .wl-backup, and chain a now-moved (dead) command.
+  const oldStatuslinePath = path.join(home, ".wait-and-learn", "runtime", "statusline.mjs");
+  const ours = existingCmd &&
+    (existingCmd.indexOf(statuslinePath) !== -1 || existingCmd.indexOf(oldStatuslinePath) !== -1);
 
   // Back up settings BEFORE writing, but only when we are not re-running over our
   // own install. Re-running would otherwise overwrite the user's original backup
