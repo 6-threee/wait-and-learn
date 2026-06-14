@@ -33,7 +33,7 @@ function tryRequire(candidates) {
   return null;
 }
 
-// Decks the user has: the bundled language decks (250 words each), plus any
+// Decks the user has: the bundled language decks (500 words each), plus any
 // extra decks added by dropping deck files into ~/.agora/decks/. That drop-in
 // folder is how you add more languages; no license server, no network call.
 const BUNDLED = ["es", "fr", "de", "it", "pt"]; // Spanish, French, German, Italian, Portuguese

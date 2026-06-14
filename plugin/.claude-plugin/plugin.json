@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "agora",
   "displayName": "Agora",
-  "version": "0.7.4",
-  "description": "Language flashcards in Claude Code's thinking spinner bar - learn a language in the seconds you wait on AI. Spaced repetition, 5 languages (250 words each), free. /agora:setup to install, /agora:deck to switch language, /agora:study to pop a review session into its own terminal.",
+  "version": "0.8.0",
+  "description": "Language flashcards in Claude Code's thinking spinner bar - learn a language in the seconds you wait on AI. Spaced repetition, 5 languages (500 words each), free. /agora:setup to install, /agora:deck to switch language, /agora:study to pop a review session into its own terminal.",
   "author": {
     "name": "Jonathan"
   },

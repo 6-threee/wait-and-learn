@@ -48,7 +48,7 @@ Then **restart Claude Code**.
 
 ## Decks and languages
 
-- Ships 5 bundled decks (Spanish, French, German, Italian, Portuguese), 250 words each.
+- Ships 5 bundled decks (Spanish, French, German, Italian, Portuguese), 500 words each.
 - List your decks or switch language:
   - `/agora:deck` - list your decks (the active one is marked)
   - `/agora:deck french` - switch the active deck
