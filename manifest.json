@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Agora: Flashcards while Claude thinks",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Turns Claude.ai thinking time into spaced-repetition language flashcards.",
   "permissions": ["storage"],
   "host_permissions": ["https://claude.ai/*"],

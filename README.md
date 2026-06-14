@@ -4,7 +4,7 @@
 language practice. The main product is a **Claude Code plugin**: your vocabulary
 shows in Claude Code's thinking spinner while it works, backed by real spaced
 repetition. Free, no account, nothing leaves your machine. Five languages
-bundled (Spanish, French, German, Italian, Portuguese), 250 words each.
+bundled (Spanish, French, German, Italian, Portuguese), 500 words each.
 
 ## Install (Claude Code plugin)
 
@@ -173,7 +173,7 @@ not. It prints a one-line confirmation and the status line moves to a fresh card
 - The rhythm state is global (not per-session) so the `wl` command can target the
   shown card. If you run several Claude Code sessions at once they share one
   rhythm; the SRS progress is shared too (one learner), which is what you want.
-- The plugin bundles 5 decks (Spanish, French, German, Italian, Portuguese), 250
+- The plugin bundles 5 decks (Spanish, French, German, Italian, Portuguese), 500
   words each; switch with `/agora:deck <language>`.
 
 ### Sharing it with others
@@ -191,7 +191,7 @@ Open the extension's options page (right-click the extension icon → **Options*
 or via `chrome://extensions` → **Details** → **Extension options**). There you
 can:
 
-- **Switch the active language** among the 5 bundled decks — Spanish, French, German, Italian, Portuguese (250 words each) — or pick any deck you have imported. Each language keeps its own spaced-repetition progress, so switching never loses your place.
+- **Switch the active language** among the 5 bundled decks — Spanish, French, German, Italian, Portuguese (500 words each) — or pick any deck you have imported. Each language keeps its own spaced-repetition progress, so switching never loses your place.
 - Import a deck by pasting its JSON into the textarea **or** choosing a `.json`
   file. Validation feedback appears inline; nothing is stored if the deck is
   malformed.

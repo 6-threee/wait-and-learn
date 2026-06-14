@@ -103,6 +103,15 @@ WL.Card = (function () {
     "@media (prefers-color-scheme: dark) {",
     "  .wl-example { color: #b5b5b5; }",
     "}",
+    ".wl-example-en {",
+    "  font-size: 12px;",
+    "  line-height: 1.4;",
+    "  color: #9aa0aa;",
+    "  margin: 3px 0 0 0;",
+    "}",
+    "@media (prefers-color-scheme: dark) {",
+    "  .wl-example-en { color: #9a9a9a; }",
+    "}",
     ".wl-reveal-hint {",
     "  font-size: 12px;",
     "  color: #8a8f98;",
@@ -221,6 +230,9 @@ WL.Card = (function () {
     var exampleText = document.createElement("p");
     exampleText.className = "wl-example wl-hidden";
 
+    var exampleEnText = document.createElement("p");
+    exampleEnText.className = "wl-example-en wl-hidden";
+
     var buttons = document.createElement("div");
     buttons.className = "wl-buttons";
 
@@ -240,6 +252,7 @@ WL.Card = (function () {
     backWrap.appendChild(divider);
     backWrap.appendChild(backText);
     backWrap.appendChild(exampleText);
+    backWrap.appendChild(exampleEnText);
     backWrap.appendChild(buttons);
 
     card.appendChild(header);
@@ -271,7 +284,8 @@ WL.Card = (function () {
       revealHint: revealHint,
       backWrap: backWrap,
       backText: backText,
-      exampleText: exampleText
+      exampleText: exampleText,
+      exampleEnText: exampleEnText
     };
   }
 
@@ -327,6 +341,14 @@ WL.Card = (function () {
     } else {
       els.exampleText.textContent = "";
       els.exampleText.classList.add("wl-hidden");
+    }
+
+    if (card.exampleEn) {
+      els.exampleEnText.textContent = card.exampleEn;
+      els.exampleEnText.classList.remove("wl-hidden");
+    } else {
+      els.exampleEnText.textContent = "";
+      els.exampleEnText.classList.add("wl-hidden");
     }
 
     // Force a reflow so the fade-in transition runs even on reuse.

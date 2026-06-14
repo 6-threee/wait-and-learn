@@ -101,7 +101,8 @@ rl.on("line", function (raw) {
     if (a === "s" || a === "skip") { skipCurrent(); showNext(); return; }
     const c = byId[currentId];
     console.log(`   ${bold}${cyan}${c.front}${reset} ${dim}→${reset} ${c.back}` +
-      (c.example ? `   ${dim}${c.example}${reset}` : ""));
+      (c.example ? `   ${dim}${c.example}${reset}` : "") +
+      (c.exampleEn ? `   ${dim}(${c.exampleEn})${reset}` : ""));
     state = "reveal";
     rl.setPrompt(gradePrompt());
     rl.prompt();

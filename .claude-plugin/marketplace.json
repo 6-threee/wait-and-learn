@@ -10,7 +10,7 @@
       "name": "agora",
       "source": "./plugin",
       "category": "productivity",
-      "description": "Language flashcards in Claude Code's thinking spinner bar - learn a language in the seconds you wait on AI. Spaced repetition, 5 languages (250 words each), free. /agora:setup to install, /agora:deck to switch language, /agora:study to pop a review session into its own terminal."
+      "description": "Language flashcards in Claude Code's thinking spinner bar - learn a language in the seconds you wait on AI. Spaced repetition, 5 languages (500 words each), free. /agora:setup to install, /agora:deck to switch language, /agora:study to pop a review session into its own terminal."
     }
   ]
 }
