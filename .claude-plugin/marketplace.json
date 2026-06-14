@@ -1,6 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-marketplace.json",
   "name": "agora",
+  "description": "Agora: language flashcards in Claude Code's thinking spinner. Free, 5 languages, spaced repetition.",
   "owner": {
     "name": "Jonathan"
   },
