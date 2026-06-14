@@ -50,7 +50,7 @@ a network request, has no account or server, and stores progress locally in
 1. Open `chrome://extensions` in Chrome.
 2. Turn on **Developer mode** (top-right toggle).
 3. Click **Load unpacked**.
-4. Select the `wait-and-learn` folder you cloned.
+4. Select the `agora` folder you cloned.
 
 After loading, refresh any open claude.ai tab so the content script attaches.
 
@@ -136,7 +136,7 @@ Add this to `~/.claude/settings.json` (replaces the default bottom bar):
 {
   "statusLine": {
     "type": "command",
-    "command": "~/.bun/bin/bun ~/Desktop/wait-and-learn/terminal/statusline.mjs",
+    "command": "~/.bun/bin/bun ~/Desktop/agora/terminal/statusline.mjs",
     "refreshInterval": 3
   }
 }
@@ -153,7 +153,7 @@ it to slow down, remove it to change only per turn.
 just type `wl got`:
 
 ```sh
-echo "alias wl='$HOME/Desktop/wait-and-learn/terminal/wl'" >> ~/.zshrc
+echo "alias wl='$HOME/Desktop/agora/terminal/wl'" >> ~/.zshrc
 source ~/.zshrc
 ```
 

@@ -7,6 +7,9 @@
   "author": {
     "name": "Jonathan"
   },
+  "homepage": "https://github.com/6-threee/agora",
+  "repository": "https://github.com/6-threee/agora",
+  "license": "MIT",
   "keywords": [
     "language",
     "flashcards",

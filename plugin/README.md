@@ -13,7 +13,7 @@ in `~/.agora/`.
 Once this repo is pushed to GitHub (or any git host), users run:
 
 ```
-/plugin marketplace add <your-username>/wait-and-learn   # the repo hosting this marketplace
+/plugin marketplace add 6-threee/agora   # the repo hosting this marketplace
 /plugin install agora@agora
 /agora:setup
 ```
@@ -21,7 +21,7 @@ Once this repo is pushed to GitHub (or any git host), users run:
 To try it locally without publishing, point at the repo on disk:
 
 ```
-/plugin marketplace add /path/to/wait-and-learn
+/plugin marketplace add /path/to/agora
 /plugin install agora@agora
 /agora:setup
 ```
