@@ -71,6 +71,12 @@ finishes, the card quietly fades away and is marked as "seen" so it is not
 immediately shown again. If you are mid-answer (the card is revealed and
 waiting), it stays put so you do not lose the rep.
 
+**Switch language:** open the extension's options page (right-click the extension
+icon → **Options**, or `chrome://extensions` → **Details** → **Extension
+options**) and pick from the 5 bundled languages — Spanish, French, German,
+Italian, Portuguese. Each keeps its own progress, so you can switch any time
+without losing where you were.
+
 **Pronunciation:** each card has a speaker button (🔊) that says the word using
 your computer's built-in voices (macOS ships Spanish, French, and others). By
 default the word is also spoken automatically when a card appears; turn that off
@@ -185,7 +191,7 @@ Open the extension's options page (right-click the extension icon → **Options*
 or via `chrome://extensions` → **Details** → **Extension options**). There you
 can:
 
-- Pick the active deck (bundled starter or any deck you have imported).
+- **Switch the active language** among the 5 bundled decks — Spanish, French, German, Italian, Portuguese (250 words each) — or pick any deck you have imported. Each language keeps its own spaced-repetition progress, so switching never loses your place.
 - Import a deck by pasting its JSON into the textarea **or** choosing a `.json`
   file. Validation feedback appears inline; nothing is stored if the deck is
   malformed.
