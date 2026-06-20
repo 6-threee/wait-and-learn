@@ -58,5 +58,3 @@ claude.ai and only stores your review progress in local browser storage.
 - Each claude.ai DOM change that breaks the detector selector means publishing an update (re-review
   each time). For personal use, load-unpacked avoids this entirely.
 - Bump `version` in `manifest.json` for every store update (currently 0.4.0).
-</content>
-</invoke>
